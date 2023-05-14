@@ -54,7 +54,7 @@ const Vehicles = () => {
           </button>
         ))}
       </div>
-      <div className='container-fluid d-flex'>
+      <div className='container-fluid d-flex flex-wrap'>
         {vehicle.map((itm, ind) => (
           <div key={ind} className='vehicles-card-container'>
             <Link to={`vehicle/${itm.uid}`} className='card-link'>

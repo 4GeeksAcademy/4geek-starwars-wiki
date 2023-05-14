@@ -55,7 +55,7 @@ const Characters = () => {
           </button>
         ))}
       </div>
-      <div className='container-fluid d-flex'>
+      <div className='container-fluid d-flex flex-wrap'>
         {people.map((itm, ind) => (
           <div key={ind} className='characters-card-container'>
             <Link to={`character/${itm.uid}`} className='card-link'>

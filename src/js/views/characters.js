@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Context } from "../store/appContext";
-import { Link } from "react-router-dom";
-import "../../styles/characters.css";
-import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
+import React, { useContext, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Context } from '../store/appContext';
+import { InfoCard } from './infoCard';
 
-const urlApiPeople = "https://www.swapi.tech/api/people";
-const imgUrl = "https://starwars-visualguide.com/assets/img/characters/";
+const urlApiPeople = 'https://www.swapi.tech/api/people';
+const imgUrl = 'https://starwars-visualguide.com/assets/img/characters/';
 
 const Characters = () => {
   const [people, setPeople] = useState([]);
   const [totalPages, setTotalPages] = useState([]);
-  const [currentPage, setCurrentPage] = useState("?page=1&limit=10");
+  const [currentPage, setCurrentPage] = useState('?page=1&limit=10');
 
   const { store, actions } = useContext(Context);
 
@@ -19,13 +18,13 @@ const Characters = () => {
     const response = await fetch(urlApiPeople + currentPage);
     const data = await response.json();
     setTotalPages([...Array(data.total_pages).keys()]);
-// preguntar
+    // preguntar
     const promises = data.results.map(async (element) => {
       const response = await fetch(element.url);
       const data = await response.json();
       return data.result;
     });
-    
+
     const results = await Promise.all(promises);
     setPeople(results);
   };
@@ -38,20 +37,16 @@ const Characters = () => {
     setCurrentPage(`?page=${page}&limit=10`);
   };
 
-  const handleAddFav = (e, uid, name) => {
-    e.preventDefault();
-    actions.addToFavorites(uid, name);
-  };
   return (
-    <div className="character-container">
-      <div className="button-container">
-        <span className="button-50" style={{ cursor: "default" }}>
+    <div className='character-container my-4'>
+      <div className='button-container mx-2'>
+        <span className='button-50 mx-2' style={{ cursor: 'default' }}>
           CHARACTERS
         </span>
         {totalPages.map((_, ind) => (
           <button
-            className="button-50"
-            role="button"
+            className='button-50'
+            role='button'
             key={ind}
             value={ind + 1}
             onClick={(e) => handleButtonPage(e.target.value)}
@@ -60,39 +55,15 @@ const Characters = () => {
           </button>
         ))}
       </div>
-      <div className="cards-view">
+      <div className='container-fluid d-flex'>
         {people.map((itm, ind) => (
-          <div key={ind} className="characters-card-container">
-            <Link to={`character/${itm.uid}`} className="card-link">
-              <div className="characters-card-container-img">
-                <img
-                  className="card-imagen"
-                  src={`${imgUrl}${itm.uid}.jpg`}
-                  alt="Character Image"
-                />
-                <span className="card-favIcon">
-                  {store.characters.some(
-                    (character) =>
-                      character.uid === itm.uid &&
-                      character.name === itm.properties.name
-                  ) ? (
-                    <MdFavorite
-                      onClick={(e) =>
-                        handleAddFav(e, itm.uid, itm.properties.name)
-                      }
-                    />
-                  ) : (
-                    <MdFavoriteBorder
-                      onClick={(e) =>
-                        handleAddFav(e, itm.uid, itm.properties.name)
-                      }
-                    />
-                  )}
-                </span>
-              </div>
-              <div className="characters-card-container-text">
-                <p>{itm.properties.name}</p>
-              </div>
+          <div key={ind} className='characters-card-container'>
+            <Link to={`character/${itm.uid}`} className='card-link'>
+              <InfoCard uid={itm.uid} name={itm.properties.name}>
+                <div className='container'>
+                  <p>{itm.properties.name}</p>
+                </div>
+              </InfoCard>
             </Link>
           </div>
         ))}
